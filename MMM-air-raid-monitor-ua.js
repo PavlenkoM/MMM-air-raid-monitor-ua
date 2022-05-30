@@ -37,7 +37,13 @@ Module.register(MODULE_NAME, {
 	getDom: async function() {
 		const wrapper = document.createElement("div");
 		wrapper.className = `${MODULE_NAME}-wrapper`;
-		wrapper.innerHTML = this.isLoading ? this.getPreloaderLoader() : await this.mapTemplate();
+
+		wrapper.innerHTML = await this.mapTemplate();
+
+		if (this.isLoading) {
+			wrapper.append(this.getPreloaderLoader());
+		}
+
 		return wrapper;
 	},
 
@@ -166,14 +172,10 @@ Module.register(MODULE_NAME, {
 	},
 
 	getPreloaderLoader: function () {
-		let preloaderContent = '';
-
-		if (!this.airRaidData) {
-			preloaderContent += '<span class="preloader__text">Loading...</span>';
-		}
-
-		preloaderContent += `<div class="preloader__spinner"></div>`;
-
-		return `<div class="preloader">${preloaderContent}</div>`;
+		return `
+			<div class="preloader">
+				<div class="preloader__spinner"></div>
+			</div>
+		`;
 	}
 });
