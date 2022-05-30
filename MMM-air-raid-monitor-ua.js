@@ -21,7 +21,7 @@ Module.register(MODULE_NAME, {
 
 	start: function() {
 		this.loadAirRaidData();
-		// this.initLoaderTimer();
+		this.initLoaderTimer();
 	},
 
 	stop: function() {
@@ -31,7 +31,7 @@ Module.register(MODULE_NAME, {
 	getDom: async function() {
 		var wrapper = document.createElement("div");
 		wrapper.className = `${MODULE_NAME}-wrapper`;
-		if (this.isLoading) {
+		if (this.isLoading && !this.airRaidData) {
 			wrapper.innerHTML = this.loadingTemplate();
 		} else {
 			wrapper.innerHTML = await this.mapTemplate();
