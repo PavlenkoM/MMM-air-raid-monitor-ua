@@ -38,11 +38,11 @@ Module.register(MODULE_NAME, {
 		const wrapper = document.createElement("div");
 		wrapper.className = `${MODULE_NAME}-wrapper`;
 
-		wrapper.innerHTML = await this.mapTemplate();
-
+		let content = await this.mapTemplate();
 		if (this.isLoading) {
-			wrapper.append(this.getPreloaderLoader());
+			content += this.getPreloaderLoader();
 		}
+		wrapper.innerHTML = content;
 
 		return wrapper;
 	},

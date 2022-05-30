@@ -33,11 +33,10 @@
   border-radius: 50%;
 }
 
-.preloader {}
-
-.preloader__text {
-  display: block;
-  padding-left: 1.5rem;
+.preloader {
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 
 .preloader__spinner {
