@@ -1,5 +1,5 @@
 const MODULE_NAME = 'MMM-air-raid-monitor-ua';
-const TIMER_INTERVAL = 10000; // 10 seconds
+const TIMER_INTERVAL = 10; // 10 seconds
 const STYLE_SELECTOR_PREFIX = 'air-raid-status';
 const STATUS = {
 	no_data: 'no_data',
@@ -27,7 +27,7 @@ Module.register(MODULE_NAME, {
 
 	start: function() {
 		this.loadAirRaidData();
-		// this.initLoaderTimer();
+		this.initLoaderTimer();
 	},
 
 	stop: function() {
@@ -46,7 +46,7 @@ Module.register(MODULE_NAME, {
 	},
 
 	getUpdateTimerInterval: function() {
-		return this.config.updateInterval < TIMER_INTERVAL ? TIMER_INTERVAL : this.config.updateInterval;
+		return (this.config.updateInterval < TIMER_INTERVAL ? TIMER_INTERVAL : this.config.updateInterval) * 1000;
 	},
 
 	getMapSVG: async function() {
