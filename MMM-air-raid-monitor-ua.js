@@ -1,5 +1,11 @@
 const MODULE_NAME = 'MMM-air-raid-monitor-ua';
-const TIMER_INTERVAL = 30000; // 30 seconds
+const TIMER_INTERVAL = 10000; // 10 seconds
+const STYLE_SELECTOR_PREFIX = 'air-raid-status';
+const STATUS = {
+	no_data: 'no_data',
+	partial: 'partial',
+	full: 'full'
+};
 
 Module.register(MODULE_NAME, {
 	requiresVersion: "2.19.0",
@@ -21,7 +27,7 @@ Module.register(MODULE_NAME, {
 
 	start: function() {
 		this.loadAirRaidData();
-		this.initLoaderTimer();
+		// this.initLoaderTimer();
 	},
 
 	stop: function() {
@@ -37,6 +43,10 @@ Module.register(MODULE_NAME, {
 			wrapper.innerHTML = await this.mapTemplate();
 		}
 		return wrapper;
+	},
+
+	getUpdateTimerInterval: function() {
+		return this.config.updateInterval < TIMER_INTERVAL ? TIMER_INTERVAL : this.config.updateInterval;
 	},
 
 	getMapSVG: async function() {
@@ -75,7 +85,7 @@ Module.register(MODULE_NAME, {
 		this.requestTimer = setTimeout(() => {
 			this.loadAirRaidData();
 			this.initLoaderTimer();
-		}, this.config.updateInterval);
+		}, this.getUpdateTimerInterval());
 	},
 
 	clearTimer: function() {
@@ -93,28 +103,37 @@ Module.register(MODULE_NAME, {
 		return `
 			${this.getMapStyles()}
 			${await this.getMapSVG()}
+			${this.getMapLegend()}
 		`;
 	},
 
 	getMapStyles: function () {
 		const statuses = {
-			no_data: {
-				selectors: [],
+			[STATUS.no_data]: {
+				selectors: [`.${STYLE_SELECTOR_PREFIX}-${STATUS.no_data}`],
 				styles: `{
 					fill: rgba(255,255,255,0.25);
+					background-color: rgba(255,255,255,0.25);
+					border: 1px solid red;
 					stroke: red;
 				}`
 			},
-			partial: {
-				selectors: [],
+			[STATUS.partial]: {
+				selectors: [`.${STYLE_SELECTOR_PREFIX}-${STATUS.partial}`],
 				styles: `{
+					background-color: rgba(255,255,255,0.5);
+					border: 1px solid #ffffff;
 					fill: rgba(255,255,255,0.5);
+					stroke: #000000;
 				}`
 			},
-			full: {
-				selectors: [],
+			[STATUS.full]: {
+				selectors: [`.${STYLE_SELECTOR_PREFIX}-${STATUS.full}`],
 				styles: `{
-					fill: rgba(255,255,255,0.9);
+					background-color: rgba(255,255,255,0.9);
+					border: 1px solid #ffffff;
+					fill: rgba(255,255,255,1);
+					stroke: #000000;
 				}`
 			}
 		};
@@ -140,5 +159,17 @@ Module.register(MODULE_NAME, {
 
 
 		return `<style>${stylesList.join(' ')}</style>`;
+	},
+
+	getMapLegend: function () {
+		const itemsList = Object.keys(STATUS).map(key => {
+			const status = STATUS[key];
+			return `
+				<li class="graph-legend-item">
+					<span class="air-raid-status-${status}"></span> ${status}
+				</li>
+			`;
+		});
+		return `<ul class="graph-legend">${itemsList.join('')}</ul>`;
 	}
 });

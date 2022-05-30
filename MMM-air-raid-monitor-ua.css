@@ -2,3 +2,29 @@
   width: 100%;
   height: auto;
 }
+
+.MMM-air-raid-monitor-ua-wrapper [class*="air-raid-status"] {
+  display: block;
+}
+
+.graph-legend {
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.graph-legend-item {
+  font-size: 0.75rem;
+  display: inline-block;
+  margin: 0 0.3rem;
+}
+
+.graph-legend [class*="air-raid-status"] {
+  display: inline-block;
+  width: 0.65rem;
+  height: 0.65rem;
+  margin-right: 0.2rem;
+  border-radius: 50%;
+}
