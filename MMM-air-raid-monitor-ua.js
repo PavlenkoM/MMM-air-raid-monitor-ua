@@ -35,13 +35,9 @@ Module.register(MODULE_NAME, {
 	},
 
 	getDom: async function() {
-		var wrapper = document.createElement("div");
+		const wrapper = document.createElement("div");
 		wrapper.className = `${MODULE_NAME}-wrapper`;
-		if (this.isLoading && !this.airRaidData) {
-			wrapper.innerHTML = this.loadingTemplate();
-		} else {
-			wrapper.innerHTML = await this.mapTemplate();
-		}
+		wrapper.innerHTML = this.isLoading ? this.getPreloaderLoader() : await this.mapTemplate();
 		return wrapper;
 	},
 
@@ -93,10 +89,6 @@ Module.register(MODULE_NAME, {
 			clearTimeout(this.requestTimer);
 			this.requestTimer = null;
 		}
-	},
-
-	loadingTemplate: function () {
-		return 'Loading...';
 	},
 
 	mapTemplate: async function () {
@@ -171,5 +163,17 @@ Module.register(MODULE_NAME, {
 			`;
 		});
 		return `<ul class="graph-legend">${itemsList.join('')}</ul>`;
+	},
+
+	getPreloaderLoader: function () {
+		let preloaderContent = '';
+
+		if (!this.airRaidData) {
+			preloaderContent += '<span class="preloader__text">Loading...</span>';
+		}
+
+		preloaderContent += `<div class="preloader__spinner"></div>`;
+
+		return `<div class="preloader">${preloaderContent}</div>`;
 	}
 });

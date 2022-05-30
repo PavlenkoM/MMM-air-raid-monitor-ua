@@ -49,8 +49,7 @@ module.exports = NodeHelper.create({
 				res.on('data', (chunk) => { rawData += chunk; });
 				res.on('end', () => {
 					try {
-					const parsedData = JSON.parse(rawData);
-						console.log(parsedData);
+						const parsedData = JSON.parse(rawData);
 						return resolve(parsedData);
 					} catch (e) {
 						console.error(e.message);
