@@ -164,7 +164,7 @@ Module.register(MODULE_NAME, {
 			const status = STATUS[key];
 			return `
 				<li class="graph-legend-item">
-					<span class="air-raid-status-${status}"></span> ${status}
+					<span class="air-raid-status-${status}"></span> ${this.translate(status)}
 				</li>
 			`;
 		});
@@ -177,5 +177,12 @@ Module.register(MODULE_NAME, {
 				<div class="preloader__spinner"></div>
 			</div>
 		`;
+	},
+
+	getTranslations: function() {
+		return {
+				en: "translations/en.json",
+				uk: "translations/uk.json"
+		}
 	}
 });
