@@ -3,6 +3,9 @@
 This is an extension for the [MagicMirror](https://github.com/MichMich/MagicMirror). It shows the current status of air raid sirens in Ukraine.
 Based on data from [sirens.in.ua](https://sirens.in.ua/).
 
+<img width="328" alt="Знімок екрана 2022-05-31 о 22 59 29" src="https://user-images.githubusercontent.com/9430298/171278252-afbf185c-b40f-4214-8292-6fa9d43af002.png">
+
+
 ## Installation
 1. Install and configure [MagicMirror](https://docs.magicmirror.builders).
 2. Navigate into your MagicMirror's `modules` folder and execute `git clone https://github.com/PavlenkoM/MMM-air-raid-monitor-ua.git`
