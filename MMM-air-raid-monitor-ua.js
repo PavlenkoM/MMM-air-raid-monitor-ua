@@ -1,27 +1,28 @@
-const MODULE_NAME = 'MMM-air-raid-monitor-ua';
-const TIMER_INTERVAL = 10; // 10 seconds
-const STYLE_SELECTOR_PREFIX = 'air-raid-status';
-const STATUS = {
-	no_data: 'no_data',
-	partial: 'partial',
-	full: 'full'
-};
+const AIR_RAID_MODULE_NAME = 'MMM-air-raid-monitor-ua';
 
-Module.register(MODULE_NAME, {
+Module.register(AIR_RAID_MODULE_NAME, {
 	requiresVersion: "2.19.0",
 
+	defaultUpdateInterval: 10,  // 10 seconds
+	styleSelectorPrefix: 'air-raid-status',
+	status: {
+		no_data: 'no_data',
+		partial: 'partial',
+		full: 'full'
+	},
+
 	defaults: {
-		updateInterval: TIMER_INTERVAL
+		updateInterval: this.defaultUpdateInterval
 	},
 
 	isLoading: false,
-	airRaidData: null,
+	airRaidData: {},
 	requestTimer: null,
 	mapSVG: null,
 
 	getStyles: function() {
 		return [
-			this.file(`${MODULE_NAME}.css`)
+			this.file(`${AIR_RAID_MODULE_NAME}.css`)
 		];
 	},
 
@@ -36,7 +37,7 @@ Module.register(MODULE_NAME, {
 
 	getDom: async function() {
 		const wrapper = document.createElement("div");
-		wrapper.className = `${MODULE_NAME}-wrapper`;
+		wrapper.className = `${AIR_RAID_MODULE_NAME}-wrapper`;
 
 		let content = await this.mapTemplate();
 		if (this.isLoading) {
@@ -48,7 +49,7 @@ Module.register(MODULE_NAME, {
 	},
 
 	getUpdateTimerInterval: function() {
-		return (this.config.updateInterval < TIMER_INTERVAL ? TIMER_INTERVAL : this.config.updateInterval) * 1000;
+		return (this.config.updateInterval < this.defaultUpdateInterval ? this.defaultUpdateInterval : this.config.updateInterval) * 1000;
 	},
 
 	getMapSVG: async function() {
@@ -57,7 +58,7 @@ Module.register(MODULE_NAME, {
 		}
 
 		try {
-			const responseData = await fetch(`/${MODULE_NAME}/ua.svg`);
+			const responseData = await fetch(`/${AIR_RAID_MODULE_NAME}/ua.svg`);
 			this.mapSVG = await responseData.text();
 		} catch (e) {
 			console.error(e);
@@ -107,8 +108,8 @@ Module.register(MODULE_NAME, {
 
 	getMapStyles: function () {
 		const statuses = {
-			[STATUS.no_data]: {
-				selectors: [`.${STYLE_SELECTOR_PREFIX}-${STATUS.no_data}`],
+			[this.status.no_data]: {
+				selectors: [`.${this.styleSelectorPrefix}-${this.status.no_data}`],
 				styles: `{
 					fill: rgba(255,255,255,0.25);
 					background-color: rgba(255,255,255,0.25);
@@ -116,8 +117,8 @@ Module.register(MODULE_NAME, {
 					stroke: red;
 				}`
 			},
-			[STATUS.partial]: {
-				selectors: [`.${STYLE_SELECTOR_PREFIX}-${STATUS.partial}`],
+			[this.status.partial]: {
+				selectors: [`.${this.styleSelectorPrefix}-${this.status.partial}`],
 				styles: `{
 					background-color: rgba(255,255,255,0.5);
 					border: 1px solid #ffffff;
@@ -125,8 +126,8 @@ Module.register(MODULE_NAME, {
 					stroke: #000000;
 				}`
 			},
-			[STATUS.full]: {
-				selectors: [`.${STYLE_SELECTOR_PREFIX}-${STATUS.full}`],
+			[this.status.full]: {
+				selectors: [`.${this.styleSelectorPrefix}-${this.status.full}`],
 				styles: `{
 					background-color: rgba(255,255,255,0.9);
 					border: 1px solid #ffffff;
@@ -160,8 +161,8 @@ Module.register(MODULE_NAME, {
 	},
 
 	getMapLegend: function () {
-		const itemsList = Object.keys(STATUS).map(key => {
-			const status = STATUS[key];
+		const itemsList = Object.keys(this.status).map(key => {
+			const status = this.status[key];
 			return `
 				<li class="graph-legend-item">
 					<span class="air-raid-status-${status}"></span> ${this.translate(status)}
